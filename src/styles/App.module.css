@@ -1,0 +1,216 @@
+/* General Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Ensure padding and border are included in element width */
+}
+
+html, body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+/* App Container */
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden; /* Ensure no overflow */
+}
+
+/* Heading Styles */
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+/* Video Container Styles */
+.video-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px auto;
+  max-width: 100%; /* Ensure it doesn't exceed viewport width */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Hide any potential overflow */
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0; /* Maintain aspect ratio */
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Overlay Styles */
+.question-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-width: calc(100% - 20px); /* Ensure it fits within the viewport */
+  overflow: hidden; /* Hide overflow */
+}
+
+/* Timer Display Styles */
+.timerDisplay {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 15px 0;
+  padding: 10px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  background-color: #e9f7ff;
+  color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden; /* Prevent overflow */
+}
+
+@media (max-width: 768px) {
+  .timerDisplay {
+    font-size: 1.2em;
+    padding: 8px;
+  }
+}
+
+/* Recognized Text Styles */
+.recognized-text {
+  font-size: 1.2em;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  line-height: 1.5;
+  word-wrap: break-word;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Evaluation Result Styles */
+.evaluationResult {
+  background-color: #fff4f4;
+  border: 2px solid #d9534f;
+  border-radius: 8px;
+  color: #d9534f;
+  padding: 15px;
+  font-size: 1.2em;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .evaluationResult {
+    font-size: 1em;
+    padding: 10px;
+  }
+}
+
+/* Mic Button Styles */
+.micWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.micButton {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5em;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.micButton:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
+.micStatus {
+  margin-top: 10px;
+  font-size: 1em;
+  color: #333;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .micButton {
+    padding: 10px;
+    font-size: 1.2em;
+  }
+
+  .micStatus {
+    font-size: 0.9em;
+  }
+}
+
+/* Buttons Container Styles */
+.buttonsContainer {
+  display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap onto multiple lines */
+  gap: 15px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 100%; /* Ensure it doesn't exceed viewport width */
+  overflow: hidden; /* Prevent overflow */
+}
+
+.buttonsContainer button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 100%;
+  max-width: 150px; /* Restrict button width */
+}
+
+.buttonsContainer button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.buttonsContainer button:active {
+  background-color: #004085;
+  transform: scale(1);
+}
