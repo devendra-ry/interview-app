@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import styles from '../styles/App.module.css'; 
+import styles from '../styles/App.module.css'; // Importing styles from CSS module
+
 const VideoStream = () => {
   const videoRef = useRef(null);
 
@@ -12,17 +13,20 @@ const VideoStream = () => {
         }
       } catch (error) {
         console.error('Error accessing local video stream:', error);
+        // Optionally set a state to show user feedback or an error message
       }
     };
 
     startLocalVideo();
 
+    // Store the current ref value in a variable
+    const currentVideoRef = videoRef.current;
+
     return () => {
-      if (videoRef.current) {
-        const stream = videoRef.current.srcObject;
-        if (stream) {
-          stream.getTracks().forEach(track => track.stop());
-        }
+      // Use the stored ref value in the cleanup function
+      if (currentVideoRef && currentVideoRef.srcObject) {
+        const stream = currentVideoRef.srcObject;
+        stream.getTracks().forEach((track) => track.stop());
       }
     };
   }, []);

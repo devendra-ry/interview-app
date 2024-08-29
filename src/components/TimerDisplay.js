@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../styles/App.module.css';
+import styles from '../styles/App.module.css'; // Import styles from CSS module
 
 const TimerDisplay = ({ start }) => {
-  const [remainingTime, setRemainingTime] = useState(2700); // 45 minutes in seconds
-  const [questionTime, setQuestionTime] = useState(120); // 2 minutes in seconds
+  const INITIAL_INTERVIEW_TIME = 2700; // 45 minutes in seconds
+  const INITIAL_QUESTION_TIME = 120; // 2 minutes in seconds
+
+  const [remainingTime, setRemainingTime] = useState(INITIAL_INTERVIEW_TIME);
+  const [questionTime, setQuestionTime] = useState(INITIAL_QUESTION_TIME);
 
   useEffect(() => {
-    let interviewInterval;
-    let questionInterval;
+    let interviewInterval = null;
+    let questionInterval = null;
 
     if (start) {
       interviewInterval = setInterval(() => {
-        setRemainingTime(prevTime => Math.max(prevTime - 1, 0));
+        setRemainingTime((prevTime) => Math.max(prevTime - 1, 0));
       }, 1000);
 
       questionInterval = setInterval(() => {
-        setQuestionTime(prevTime => {
-          if (prevTime <= 1) {
-            return 120; // Reset to 2 minutes
-          }
-          return prevTime - 1;
-        });
+        setQuestionTime((prevTime) => (prevTime <= 1 ? INITIAL_QUESTION_TIME : prevTime - 1));
       }, 1000);
     }
 
+    // Cleanup intervals on component unmount or when start changes
     return () => {
       clearInterval(interviewInterval);
       clearInterval(questionInterval);
     };
-  }, [start]);
+  }, [start]); // Dependency array includes start to reset intervals when it changes
 
+  // Format seconds into MM:SS format
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
