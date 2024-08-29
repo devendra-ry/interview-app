@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from '../styles/App.module.css';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import VideoStream from './VideoStream';
+import VideoStreamAndRecorder from './VideoStreamAndRecorder';
 import TimerDisplay from './TimerDisplay';
 import SpeechRecognitionControls from './SpeechRecognitionControls';
 import Result from './Result';
@@ -132,7 +132,7 @@ const App = () => {
     <div className={styles.App}>
       <h1>Video Interview App</h1>
       <div className={styles.videoContainer}>
-        <VideoStream videoRef={videoRef} />
+        <VideoStreamAndRecorder videoRef={videoRef} />
         {isInterviewActive && questions.length > 0 && (
           <div className={styles.currentQuestion}>
             <h2>Question:</h2>
