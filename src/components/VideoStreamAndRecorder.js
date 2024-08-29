@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../styles/App.module.css';
 
-const VideoStreamAndRecorder = ({ videoRef }) => {
+const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [recordedChunks, setRecordedChunks] = useState([]);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     const startLocalVideo = async () => {
@@ -30,29 +31,64 @@ const VideoStreamAndRecorder = ({ videoRef }) => {
     };
   }, [videoRef]);
 
+  useEffect(() => {
+    // Canvas setup (runs only once when video dimensions are available)
+    if (canvasRef.current && videoRef.current && videoRef.current.videoWidth > 0) {
+      canvasRef.current.width = videoRef.current.videoWidth;
+      canvasRef.current.height = videoRef.current.videoHeight;
+    }
+  }, [videoRef]); // Only depend on videoRef
+
   const handleStartRecording = () => {
-    if (!isRecording) {
-      const stream = videoRef.current.srcObject;
-      if (stream) {
-        const newRecorder = new MediaRecorder(stream);
-        setRecorder(newRecorder);
+    if (!isRecording && canvasRef.current && videoRef.current) {
+      const stream = canvasRef.current.captureStream();
+      const newRecorder = new MediaRecorder(stream);
 
-        newRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            setRecordedChunks((prevChunks) => [...prevChunks, event.data]);
+      newRecorder.ondataavailable = (event) => {
+        console.log('Data chunk received:', event.data); 
+        if (event.data.size > 0) {
+          setRecordedChunks((prevChunks) => [...prevChunks, event.data]);
+        }
+      };
+
+      newRecorder.onstop = () => {
+        console.log('Recording stopped', newRecorder.state);
+        setIsRecording(false);
+      };
+
+      newRecorder.start();
+      setIsRecording(true);
+
+      const ctx = canvasRef.current.getContext('2d');
+      const video = videoRef.current;
+
+      const drawFrame = () => {
+        if (isRecording) {
+          ctx.drawImage(video, 0, 0, canvasRef.current.width, canvasRef.current.height);
+
+          if (questions && questions.length > 0 && currentQuestionIndex < questions.length) {
+            ctx.font = '20px Arial';
+            ctx.fillStyle = 'white';
+            ctx.fillText(questions[currentQuestionIndex], 10, 30);
           }
-        };
 
-        newRecorder.start();
-        setIsRecording(true);
+          requestAnimationFrame(drawFrame);
+        }
+      };
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        drawFrame();
+      } else {
+        video.addEventListener('canplaythrough', drawFrame, { once: true });
       }
+
+      setRecorder(newRecorder);
     }
   };
 
   const handleStopRecording = () => {
     if (recorder) {
       recorder.stop();
-      setIsRecording(false);
     }
   };
 
@@ -71,6 +107,7 @@ const VideoStreamAndRecorder = ({ videoRef }) => {
     <div className={styles.videoWrapper}>
       <div className={styles.videoContainer}>
         <video ref={videoRef} autoPlay muted />
+        <canvas ref={canvasRef} style={{ display: 'none' }} /> 
       </div>
       <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
         {isRecording ? 'Stop Recording' : 'Start Recording'}

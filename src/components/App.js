@@ -134,9 +134,8 @@ const App = () => {
       <div className={styles.videoContainer}>
         <VideoStreamAndRecorder videoRef={videoRef} />
         {isInterviewActive && questions.length > 0 && (
-          <div className={styles.currentQuestion}>
-            <h2>Question:</h2>
-            {isLoading ? <p>Loading next question...</p> : <p>{questions[currentQuestionIndex]}</p>}
+          <div className={styles.questionOverlay}> {/* Overlay container */}
+            <p>{questions[currentQuestionIndex]}</p> {/* Question text */}
           </div>
         )}
       </div>

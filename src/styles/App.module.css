@@ -57,6 +57,7 @@ h1 {
   max-width: 600px;
   height: auto;
   border: 1px solid #ccc;
+  position: relative; /* Add this line */
 }
 
 video {
@@ -71,18 +72,18 @@ button {
 }
 
 /* Overlay Styles */
+/* ... (other CSS styles) */
+
+/* Overlay Styles (modified) */
 .questionOverlay {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.6);
+  position: absolute; 
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  background: rgba(0, 0, 0, 0.6); 
   color: white;
   padding: 12px;
   border-radius: var(--border-radius);
-  box-shadow: 0 4px 6px var(--shadow-light);
-  z-index: 10;
-  max-width: calc(100% - 20px); /* Ensure it fits within the viewport */
-  overflow: hidden; /* Hide overflow */
+  z-index: 10; 
 }
 
 /* Timer Display Styles */
