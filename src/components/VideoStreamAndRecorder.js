@@ -31,13 +31,14 @@ const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex, isI
   }, [videoRef]);
 
   const handleStartRecording = () => {
-    console.log("Start Recording button clicked"); 
+    console.log("Start Recording button clicked");
     if (!isRecording && videoRef.current) {
-      const stream = videoRef.current.srcObject; 
-      console.log("Captured Stream:", stream); 
+      const stream = videoRef.current.srcObject;
+      console.log("Captured Stream:", stream);
 
-      const newRecorder = new MediaRecorder(stream, { mimeType: 'video/mp4' });
-      console.log("MediaRecorder:", newRecorder); 
+      // Explicitly set mimeType to 'video/webm'
+      const newRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      console.log("MediaRecorder:", newRecorder);
 
       newRecorder.ondataavailable = (event) => {
         console.log('Data chunk received:', event.data);
@@ -52,28 +53,30 @@ const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex, isI
       };
 
       newRecorder.start();
-      console.log("MediaRecorder started"); 
+      console.log("MediaRecorder started");
       setIsRecording(true);
       setRecorder(newRecorder);
     }
   };
 
   const handleStopRecording = () => {
-    console.log("Stop Recording button clicked"); 
+    console.log("Stop Recording button clicked");
     if (recorder) {
       recorder.stop();
-      console.log("MediaRecorder stopped"); 
+      console.log("MediaRecorder stopped");
     }
   };
 
   const handleSaveRecording = () => {
-    console.log("Save Recording button clicked"); 
-    console.log("Recorded Chunks:", recordedChunks); 
-    const blob = new Blob(recordedChunks, { type: 'video/webm' }); 
+    console.log("Save Recording button clicked");
+    console.log("Recorded Chunks:", recordedChunks);
+
+    // Ensure consistent MIME type for Blob and download
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'recording.webm';
+    a.download = 'recording.webm'; 
     a.click();
     URL.revokeObjectURL(url);
     setRecordedChunks([]);
@@ -89,12 +92,14 @@ const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex, isI
           </div>
         )}
       </div>
-      <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
-        {isRecording ? 'Stop Recording' : 'Start Recording'}
-      </button>
-      {recordedChunks.length > 0 && !isRecording && (
-        <button onClick={handleSaveRecording}>Save Recording</button>
-      )}
+      <div className={styles.buttonsContainer}>
+        <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
+          {isRecording ? 'Stop Recording' : 'Start Recording'}
+        </button>
+        {recordedChunks.length > 0 && !isRecording && (
+          <button onClick={handleSaveRecording}>Save Recording</button>
+        )}
+      </div>
     </div>
   );
 };

@@ -15,7 +15,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const videoRef = useRef(null);
-  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   useEffect(() => {
     startLocalVideo();
@@ -49,10 +50,10 @@ const App = () => {
     try {
       const response = await fetch('http://localhost:5000/api/question');
       if (!response.ok) throw new Error('Failed to fetch question');
-      
+
       const data = await response.json();
       setQuestions(prevQuestions => [...prevQuestions, data.question]);
-      setRetryCount(0); 
+      setRetryCount(0);
     } catch (error) {
       console.error('Error fetching questions:', error);
       if (retryCount < 3) {
@@ -70,7 +71,7 @@ const App = () => {
       const response = await fetch('http://localhost:5000/api/start-interview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic: 'general', difficulty: 'easy' })
+        body: JSON.stringify({ topic: 'general', difficulty: 'easy' }),
       });
       if (response.ok) {
         setIsInterviewActive(true);
@@ -97,10 +98,10 @@ const App = () => {
       const response = await fetch('http://localhost:5000/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: transcript })
+        body: JSON.stringify({ text: transcript }),
       });
       if (!response.ok) throw new Error('Failed to submit text');
-      
+
       const result = await response.json();
       setEvaluationResult(result.correct ? 'Correct!' : 'Incorrect. Try again.');
       resetTranscript();
@@ -118,10 +119,9 @@ const App = () => {
       });
     }
   }, [currentQuestionIndex, questions.length, fetchQuestions]);
-  
 
   const handleMicClick = () => {
-    listening ? SpeechRecognition.stopListening() : SpeechRecognition.startListening();
+    listening ? SpeechRecognition.stopListening() : SpeechRecognition.startListening({ continuous: true });
   };
 
   if (!browserSupportsSpeechRecognition) {
@@ -131,27 +131,33 @@ const App = () => {
   return (
     <div className={styles.App}>
       <h1>Video Interview App</h1>
-      <div className={styles.videoContainer}>
-        <VideoStreamAndRecorder videoRef={videoRef} />
-        {isInterviewActive && questions.length > 0 && (
-          <div className={styles.questionOverlay}> {/* Overlay container */}
-            <p>{questions[currentQuestionIndex]}</p> {/* Question text */}
-          </div>
-        )}
+
+      <div className={styles.contentWrapper}>
+        <div className={styles.leftPanel}>
+          <TimerDisplay start={isInterviewActive} />
+          <div className={styles.recognizedText}>Recognized Text: {transcript}</div>
+          <Result evaluationResult={evaluationResult} />
+          {!isInterviewActive ? (
+            <Buttons startInterview={startInterview} />
+          ) : (
+            <Buttons
+              endInterview={endInterview}
+              goToNextQuestion={goToNextQuestion}
+              submitText={submitTextToBackend}
+            />
+          )}
+          <SpeechRecognitionControls listening={listening} handleMicClick={handleMicClick} />
+        </div>
+
+        <div className={styles.videoContainer}>
+          <VideoStreamAndRecorder
+            videoRef={videoRef}
+            questions={questions}
+            currentQuestionIndex={currentQuestionIndex}
+            isInterviewActive={isInterviewActive}
+          />
+        </div>
       </div>
-      <TimerDisplay start={isInterviewActive} />
-      <div className={styles.recognizedText}>Recognized Text: {transcript}</div>
-      <Result evaluationResult={evaluationResult} />
-      {!isInterviewActive ? (
-        <Buttons startInterview={startInterview} />
-      ) : (
-        <Buttons
-          endInterview={endInterview}
-          goToNextQuestion={goToNextQuestion}
-          submitText={submitTextToBackend}
-        />
-      )}
-      <SpeechRecognitionControls listening={listening} handleMicClick={handleMicClick} />
     </div>
   );
 };

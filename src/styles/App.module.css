@@ -1,112 +1,102 @@
 /* Root Variables */
 :root {
-  --primary-color: #007bff;
-  --secondary-color: #0056b3;
-  --background-color: #f5f5f5;
-  --text-color: #333;
+  --primary-color: #28a745; /* Green */
+  --secondary-color: #007bff; /* Blue */
+  --background-color: #f8f9fa; /* Light Gray */
+  --text-color: #343a40; /* Dark Gray */
   --border-radius: 8px;
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.2);
 }
 
 /* General Styles */
-*,
-*::before,
-*::after {
-  box-sizing: border-box; /* Ensure padding and border are included in element width */
+* {
+  box-sizing: border-box;
 }
 
-html, body {
-  font-family: Arial, sans-serif;
+body {
+  font-family: 'Roboto', sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scrollbar */
+  line-height: 1.6;
 }
 
 /* App Container */
 .App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden; /* Ensure no overflow */
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  text-align: center;
 }
 
 /* Heading Styles */
 h1 {
-  font-size: 2em;
+  font-size: 2.5em;
   margin-bottom: 20px;
   color: var(--primary-color);
 }
 
-.videoWrapper {
+/* New CSS for layout */
+.contentWrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
+  gap: 20px; /* Space between left and right panels */
 }
 
+.leftPanel {
+  flex: 1; /* Left panel takes up available space */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left */
+}
+
+/* Video Container */
 .videoContainer {
+  flex: 1; /* Video container takes up available space */
+  position: relative;
   width: 100%;
   max-width: 600px;
-  height: auto;
+  margin-bottom: 30px;
   border: 1px solid #ccc;
-  position: relative; /* Add this line */
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 
 video {
   width: 100%;
   height: auto;
-}
-
-button {
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 16px;
+  display: block;
 }
 
 /* Overlay Styles */
-/* ... (other CSS styles) */
-
-/* Overlay Styles (modified) */
 .questionOverlay {
-  position: absolute; 
-  top: 10px; /* Adjust as needed */
-  left: 10px; /* Adjust as needed */
-  background: rgba(0, 0, 0, 0.6); 
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   padding: 12px;
-  border-radius: var(--border-radius);
-  z-index: 10; 
+  z-index: 10;
 }
 
 /* Timer Display Styles */
 .timerDisplay {
-  font-size: 1.4em;
+  font-size: 1.2em;
   font-weight: bold;
-  margin: 15px 0;
+  margin: 10px 0; 
   padding: 10px;
   border: 2px solid var(--primary-color);
   border-radius: var(--border-radius);
   background-color: #e9f7ff;
   color: var(--text-color);
   box-shadow: 0 4px 8px var(--shadow-light);
-  width: 100%;
-  max-width: 400px;
-  overflow: hidden; /* Prevent overflow */
+  width: 100%; 
+  display: block; 
+  white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .timerDisplay {
-    font-size: 1.2em;
-    padding: 8px;
-  }
+.timerDisplay:last-child {
+  margin-right: 0;
 }
 
 /* Recognized Text Styles */
@@ -122,29 +112,18 @@ button {
   line-height: 1.5;
   word-wrap: break-word;
   width: 100%;
-  max-width: 600px;
 }
 
 /* Evaluation Result Styles */
 .evaluationResult {
   background-color: #fff4f4;
-  border: 2px solid #d9534f;
-  border-radius: var(--border-radius);
   color: #d9534f;
   padding: 15px;
   font-size: 1.2em;
   font-weight: bold;
-  box-shadow: 0 4px 8px var(--shadow-light);
   max-width: 90%;
   margin: 20px auto;
   text-align: center;
-}
-
-@media (max-width: 768px) {
-  .evaluationResult {
-    font-size: 1em;
-    padding: 10px;
-  }
 }
 
 /* Mic Button Styles */
@@ -152,7 +131,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
+  margin: 20px 0;
 }
 
 .micButton {
@@ -179,30 +158,18 @@ button {
   font-weight: bold;
 }
 
-@media (max-width: 768px) {
-  .micButton {
-    padding: 10px;
-    font-size: 1.2em;
-  }
-
-  .micStatus {
-    font-size: 0.9em;
-  }
-}
-
 /* Buttons Container Styles */
 .buttonsContainer {
   display: flex;
-  flex-wrap: wrap; /* Allow buttons to wrap onto multiple lines */
+  justify-content: flex-start; 
   gap: 15px;
-  margin: 20px 0;
-  width: 100%;
-  max-width: 100%; /* Ensure it doesn't exceed viewport width */
-  overflow: hidden; /* Prevent overflow */
+  margin-bottom: 20px; 
+  width: 100%; 
 }
 
+/* *** Styles for Buttons within the Container *** */
 .buttonsContainer button {
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color);
   border: none;
   color: white;
   padding: 12px 20px;
@@ -210,16 +177,14 @@ button {
   cursor: pointer;
   font-size: 1em;
   transition: background-color 0.3s, transform 0.2s;
-  width: 100%;
-  max-width: 150px; /* Restrict button width */
 }
 
 .buttonsContainer button:hover {
-  background-color: var(--secondary-color);
+  background-color: #0056b3; /* A darker shade of blue */
   transform: scale(1.05);
 }
 
 .buttonsContainer button:active {
-  background-color: #004085;
+  background-color: #002d56; /* An even darker shade of blue */
   transform: scale(1);
 }
