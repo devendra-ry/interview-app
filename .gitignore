@@ -1,23 +1,65 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
+# Node.js
+node_modules/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+yarn-error.log
+build/
+dist/
+.env
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+
+# Java
+*.class
+*.jar
+target/
+.idea/
+*.iml
+
+# C/C++
+*.o
+*.exe
+build/
+bin/
+obj/
+
+# Ruby
+.bundle/
+log/
+tmp/
+coverage/
+
+# PHP
+vendor/
+*.log
+.env
+
+# Go
+*.exe
+*.test
+vendor/
+
+# Swift
+*.xcodeproj/
+*.xcworkspace/
+*.xcuserstate
+
+# .NET
+bin/
+obj/
+*.suo
+*.user
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
