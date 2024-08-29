@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../styles/App.module.css';
 
-const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex }) => {
+const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex, isInterviewActive }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [recordedChunks, setRecordedChunks] = useState([]);
-  const canvasRef = useRef(null);
 
   useEffect(() => {
     const startLocalVideo = async () => {
@@ -31,23 +30,19 @@ const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex }) =
     };
   }, [videoRef]);
 
-  useEffect(() => {
-    // Canvas setup (runs only once when video dimensions are available)
-    if (canvasRef.current && videoRef.current && videoRef.current.videoWidth > 0) {
-      canvasRef.current.width = videoRef.current.videoWidth;
-      canvasRef.current.height = videoRef.current.videoHeight;
-    }
-  }, [videoRef]); // Only depend on videoRef
-
   const handleStartRecording = () => {
-    if (!isRecording && canvasRef.current && videoRef.current) {
-      const stream = canvasRef.current.captureStream();
-      const newRecorder = new MediaRecorder(stream);
+    console.log("Start Recording button clicked"); 
+    if (!isRecording && videoRef.current) {
+      const stream = videoRef.current.srcObject; 
+      console.log("Captured Stream:", stream); 
+
+      const newRecorder = new MediaRecorder(stream, { mimeType: 'video/mp4' });
+      console.log("MediaRecorder:", newRecorder); 
 
       newRecorder.ondataavailable = (event) => {
-        console.log('Data chunk received:', event.data); 
+        console.log('Data chunk received:', event.data);
         if (event.data.size > 0) {
-          setRecordedChunks((prevChunks) => [...prevChunks, event.data]);
+          setRecordedChunks(prevChunks => [...prevChunks, event.data]);
         }
       };
 
@@ -57,43 +52,24 @@ const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex }) =
       };
 
       newRecorder.start();
+      console.log("MediaRecorder started"); 
       setIsRecording(true);
-
-      const ctx = canvasRef.current.getContext('2d');
-      const video = videoRef.current;
-
-      const drawFrame = () => {
-        if (isRecording) {
-          ctx.drawImage(video, 0, 0, canvasRef.current.width, canvasRef.current.height);
-
-          if (questions && questions.length > 0 && currentQuestionIndex < questions.length) {
-            ctx.font = '20px Arial';
-            ctx.fillStyle = 'white';
-            ctx.fillText(questions[currentQuestionIndex], 10, 30);
-          }
-
-          requestAnimationFrame(drawFrame);
-        }
-      };
-
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        drawFrame();
-      } else {
-        video.addEventListener('canplaythrough', drawFrame, { once: true });
-      }
-
       setRecorder(newRecorder);
     }
   };
 
   const handleStopRecording = () => {
+    console.log("Stop Recording button clicked"); 
     if (recorder) {
       recorder.stop();
+      console.log("MediaRecorder stopped"); 
     }
   };
 
   const handleSaveRecording = () => {
-    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    console.log("Save Recording button clicked"); 
+    console.log("Recorded Chunks:", recordedChunks); 
+    const blob = new Blob(recordedChunks, { type: 'video/webm' }); 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -107,7 +83,11 @@ const VideoStreamAndRecorder = ({ videoRef, questions, currentQuestionIndex }) =
     <div className={styles.videoWrapper}>
       <div className={styles.videoContainer}>
         <video ref={videoRef} autoPlay muted />
-        <canvas ref={canvasRef} style={{ display: 'none' }} /> 
+        {isInterviewActive && questions.length > 0 && (
+          <div className={styles.questionOverlay}>
+            <p>{questions[currentQuestionIndex]}</p>
+          </div>
+        )}
       </div>
       <button onClick={isRecording ? handleStopRecording : handleStartRecording}>
         {isRecording ? 'Stop Recording' : 'Start Recording'}
